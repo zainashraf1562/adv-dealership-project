@@ -1,5 +1,6 @@
 package com.pluralsight;
 
+import java.time.Year;
 import java.util.List;
 import java.util.Scanner;
 
@@ -59,6 +60,9 @@ public class UserInterface {
                     break;
                 case "9":
                     processRemoveVehicleRequest();
+                    break;
+                case "10":
+                    processVehicleContract();
                     break;
                 case "99":
                     quit = true;
@@ -182,6 +186,39 @@ public class UserInterface {
 
         DealershipFileManager manager = new DealershipFileManager();
         manager.saveDealership(dealership);
+    }
+
+    private void processVehicleContract(){
+        System.out.print("Enter Vehicle Vin: ");
+        int vin = scanner.nextInt();
+        scanner.nextLine();
+        Vehicle vehicleSold = dealership.getVehiclesByVin(vin);
+        System.out.print("Enter today's date: ");
+        String date = scanner.nextLine();
+        System.out.print("Enter your name: ");
+        String customerName = scanner.nextLine();
+        System.out.print("Enter your email: ");
+        String customerEmail = scanner.nextLine();
+        System.out.print("Enter 1. Sale | 2. Lease: ");
+        int userInput = scanner.nextInt();
+        scanner.nextLine();
+        if (userInput == 1) {
+            System.out.println("Enter 1. Finance | 2. No Finance: ");
+            int userInput2 = scanner.nextInt();
+            scanner.nextLine();
+            boolean financeOption = userInput2 == 1;
+            SalesContract salesContract = new SalesContract(date,customerName,customerEmail, vehicleSold, financeOption);
+            System.out.println("Contract successfully created and saved.");
+        }else {
+            int year = Year.now().getValue();
+            if ((year - vehicleSold.getYear()) > 3) {
+                System.out.println("You cannot lease Vehicle older than 3 years");
+                return;
+            }
+            LeaseContract leaseContract = new LeaseContract(date,customerName,customerEmail, vehicleSold);
+            System.out.println("Contract successfully created and saved.");
+        }
+
     }
 
     private void init() {

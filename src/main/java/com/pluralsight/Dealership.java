@@ -1,5 +1,6 @@
 package com.pluralsight;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,6 +106,17 @@ public class Dealership {
             }
         }
         return sorted;
+    }
+    public Vehicle getVehiclesByVin(int vin) {
+
+        for (Vehicle vehicle : inventory) {
+            if (vehicle.getVin() == vin){
+                System.out.println(vehicle.getMake());
+                return vehicle;
+            }
+        }
+        System.out.println("InValid Vin");
+        return null;
     }
 
     public List<Vehicle> getAllVehicles(){
