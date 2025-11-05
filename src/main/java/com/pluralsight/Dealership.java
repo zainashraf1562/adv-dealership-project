@@ -108,15 +108,14 @@ public class Dealership {
         return sorted;
     }
     public Vehicle getVehiclesByVin(int vin) {
+        Vehicle vehicle1 = null;
 
         for (Vehicle vehicle : inventory) {
             if (vehicle.getVin() == vin){
-                System.out.println(vehicle.getMake());
-                return vehicle;
+                vehicle1 = vehicle;
             }
         }
-        System.out.println("InValid Vin");
-        return null;
+        return vehicle1;
     }
 
     public List<Vehicle> getAllVehicles(){

@@ -189,11 +189,17 @@ public class UserInterface {
     }
 
     private void processVehicleContract(){
+        ContractDataManager CDM = new ContractDataManager();
         System.out.print("Enter Vehicle Vin: ");
         int vin = scanner.nextInt();
         scanner.nextLine();
         Vehicle vehicleSold = dealership.getVehiclesByVin(vin);
-        System.out.print("Enter today's date: ");
+        if (vehicleSold == null){
+            System.out.println("Error!");
+            return;
+        }
+
+        System.out.print("Enter today's date (YYYY/MM/DD): ");
         String date = scanner.nextLine();
         System.out.print("Enter your name: ");
         String customerName = scanner.nextLine();
@@ -202,20 +208,23 @@ public class UserInterface {
         System.out.print("Enter 1. Sale | 2. Lease: ");
         int userInput = scanner.nextInt();
         scanner.nextLine();
+
         if (userInput == 1) {
-            System.out.println("Enter 1. Finance | 2. No Finance: ");
+            System.out.println("Enter 1. Finance | 2. NO Finance10: ");
             int userInput2 = scanner.nextInt();
             scanner.nextLine();
             boolean financeOption = userInput2 == 1;
-            SalesContract salesContract = new SalesContract(date,customerName,customerEmail, vehicleSold, financeOption);
+            CDM.saveContract(new SalesContract(date,customerName,customerEmail, vehicleSold, financeOption));
+            dealership.removeVehicle(vehicleSold);
             System.out.println("Contract successfully created and saved.");
-        }else {
+        }else if(userInput == 2) {
             int year = Year.now().getValue();
             if ((year - vehicleSold.getYear()) > 3) {
                 System.out.println("You cannot lease Vehicle older than 3 years");
                 return;
             }
-            LeaseContract leaseContract = new LeaseContract(date,customerName,customerEmail, vehicleSold);
+            CDM.saveContract(new LeaseContract(date,customerName,customerEmail, vehicleSold));
+            dealership.removeVehicle(vehicleSold);
             System.out.println("Contract successfully created and saved.");
         }
 
